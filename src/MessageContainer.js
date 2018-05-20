@@ -9,7 +9,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ListView, View, StyleSheet } from 'react-native';
+import { ListView, View, StyleSheet, FlatList } from 'react-native';
 
 import shallowequal from 'shallowequal';
 import InvertibleScrollView from 'react-native-invertible-scroll-view';
@@ -18,7 +18,6 @@ import LoadEarlier from './LoadEarlier';
 import Message from './Message';
 
 export default class MessageContainer extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -35,7 +34,10 @@ export default class MessageContainer extends React.Component {
 
     const messagesData = this.prepareMessages(props.messages);
     this.state = {
-      dataSource: dataSource.cloneWithRows(messagesData.blob, messagesData.keys),
+      dataSource: dataSource.cloneWithRows(
+        messagesData.blob,
+        messagesData.keys,
+      ),
     };
   }
 
@@ -45,7 +47,10 @@ export default class MessageContainer extends React.Component {
     }
     const messagesData = this.prepareMessages(nextProps.messages);
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(messagesData.blob, messagesData.keys),
+      dataSource: this.state.dataSource.cloneWithRows(
+        messagesData.blob,
+        messagesData.keys,
+      ),
     });
   }
 
@@ -61,12 +66,13 @@ export default class MessageContainer extends React.Component {
 
   prepareMessages(messages) {
     return {
-      keys: messages.map((m) => m._id),
+      keys: messages.map(m => m._id),
       blob: messages.reduce((o, m, i) => {
         const previousMessage = messages[i + 1] || {};
         const nextMessage = messages[i - 1] || {};
         // add next and previous messages to hash to ensure updates
-        const toHash = JSON.stringify(m) + previousMessage._id + nextMessage._id;
+        const toHash =
+          JSON.stringify(m) + previousMessage._id + nextMessage._id;
         o[m._id] = {
           ...m,
           previousMessage,
@@ -107,11 +113,17 @@ export default class MessageContainer extends React.Component {
 
   renderRow(message) {
     if (!message._id && message._id !== 0) {
-      console.warn('GiftedChat: `_id` is missing for message', JSON.stringify(message));
+      console.warn(
+        'GiftedChat: `_id` is missing for message',
+        JSON.stringify(message),
+      );
     }
     if (!message.user) {
       if (!message.system) {
-        console.warn('GiftedChat: `user` is missing for message', JSON.stringify(message));
+        console.warn(
+          'GiftedChat: `user` is missing for message',
+          JSON.stringify(message),
+        );
       }
       message.user = {};
     }
@@ -137,7 +149,7 @@ export default class MessageContainer extends React.Component {
       <InvertibleScrollView
         {...props}
         {...invertibleScrollViewProps}
-        ref={(component) => (this._invertibleScrollViewRef = component)}
+        ref={component => (this._invertibleScrollViewRef = component)}
       />
     );
   }
@@ -149,23 +161,26 @@ export default class MessageContainer extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ListView
+        <FlatList
           enableEmptySections
           automaticallyAdjustContentInsets={false}
           initialListSize={20}
           pageSize={20}
           {...this.props.listViewProps}
-          dataSource={this.state.dataSource}
+          data={this.state.dataSource}
           contentContainerStyle={contentContainerStyle}
           renderRow={this.renderRow}
-          renderHeader={this.props.inverted ? this.renderFooter : this.renderLoadEarlier}
-          renderFooter={this.props.inverted ? this.renderLoadEarlier : this.renderFooter}
+          renderHeader={
+            this.props.inverted ? this.renderFooter : this.renderLoadEarlier
+          }
+          renderFooter={
+            this.props.inverted ? this.renderLoadEarlier : this.renderFooter
+          }
           renderScrollComponent={this.renderScrollComponent}
         />
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -182,7 +197,7 @@ MessageContainer.defaultProps = {
   user: {},
   renderFooter: null,
   renderMessage: null,
-  onLoadEarlier: () => { },
+  onLoadEarlier: () => {},
   inverted: true,
   loadEarlier: false,
   listViewProps: {},
