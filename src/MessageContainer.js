@@ -26,19 +26,7 @@ export default class MessageContainer extends React.Component {
     this.renderLoadEarlier = this.renderLoadEarlier.bind(this);
     this.renderScrollComponent = this.renderScrollComponent.bind(this);
 
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => {
-        return r1.hash !== r2.hash;
-      },
-    });
-
     const messagesData = this.prepareMessages(props.messages);
-    this.state = {
-      dataSource: dataSource.cloneWithRows(
-        messagesData.blob,
-        messagesData.keys,
-      ),
-    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,7 +99,7 @@ export default class MessageContainer extends React.Component {
     return null;
   }
 
-  renderRow(message) {
+  renderRow({ message, index }) {
     if (!message._id && message._id !== 0) {
       console.warn(
         'GiftedChat: `_id` is missing for message',
@@ -164,7 +152,7 @@ export default class MessageContainer extends React.Component {
       <View style={styles.container}>
         <FlatList
           {...this.props.listViewProps}
-          data={this.state.dataSource}
+          data={messagesData}
           columnWrapperStyle={contentContainerStyle}
           renderItem={this.renderRow}
           ListHeaderComponent={
