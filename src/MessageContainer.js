@@ -163,21 +163,16 @@ export default class MessageContainer extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          enableEmptySections
-          automaticallyAdjustContentInsets={false}
-          initialListSize={20}
-          pageSize={20}
           {...this.props.listViewProps}
           data={this.state.dataSource}
-          contentContainerStyle={contentContainerStyle}
-          renderRow={this.renderRow}
-          renderHeader={
+          columnWrapperStyle={contentContainerStyle}
+          renderItem={this.renderRow}
+          ListHeaderComponent={
             this.props.inverted ? this.renderFooter : this.renderLoadEarlier
           }
-          renderFooter={
+          ListFooterComponent={
             this.props.inverted ? this.renderLoadEarlier : this.renderFooter
           }
-          renderScrollComponent={this.renderScrollComponent}
         />
       </View>
     );
