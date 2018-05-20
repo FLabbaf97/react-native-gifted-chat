@@ -155,6 +155,7 @@ export default class MessageContainer extends React.Component {
   }
 
   render() {
+    console.warn('MessageContainer');
     const contentContainerStyle = this.props.inverted
       ? {}
       : styles.notInvertedContentContainerStyle;
