@@ -137,18 +137,7 @@ export default class MessageContainer extends React.Component {
 
     return (
       <View style={styles.container}>
-        <FlatList
-          {...this.props.listViewProps}
-          data={messagesData}
-          columnWrapperStyle={contentContainerStyle}
-          renderItem={this.renderRow}
-          ListHeaderComponent={
-            this.props.inverted ? this.renderFooter : this.renderLoadEarlier
-          }
-          ListFooterComponent={
-            this.props.inverted ? this.renderLoadEarlier : this.renderFooter
-          }
-        />
+        <Text>{messagesData}</Text>
       </View>
     );
   }
